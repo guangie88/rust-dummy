@@ -58,7 +58,33 @@ after_success:
       # cargo login "$CRATES_TOKEN"
       # cargo publish
     elif [ "$ARTIFACT" = "true" ] && [ -n "$TRAVIS_TAG" ]; then
-      xxx
+      curl -X POST \
+        -H "Authorization: token $GITHUB_TOKEN" \
+        -H "Content-Type: application/json" \
+        -d \
+        '{
+            "tag_name": "$TRAVIS_TAG",
+            "target_commitish": "master",
+            "name": "TODO",
+            "body": "This is TODO"
+        }' \
+        "https://api.github.com/repos/guangie88/rust-dummy/releases"
+
+      # this needs to be jq processed to extract out the `id` value
+      # and assign the value as TAG_ID
+      curl -X GET \
+        -H "Authorization: token $GITHUB_TOKEN" \
+        "https://api.github.com/repos/guangie88/rust-dummy/releases"
+
+      # TODO need to zip up the artifacts
+      # zip ...
+      # and assign to ZIP_FILE
+
+      curl -X POST \
+        -H "Authorization: token $GITHUB_TOKEN" \
+        -H "Content-Type: application/zip" \
+        --upload-file $ZIP_FILE \
+        "https://uploads.github.com/repos/guangie88/rust-dummy/releases/$TAG_ID/assets?name=rust-dummy-$TRAVIS_TAG.zip"
     elif [ "$COVERAGE" = "true" ] && [ -z "$TRAVIS_TAG" ]; then
       docker run --security-opt seccomp=unconfined -v "$PWD:/volume" \
         guangie88/ubuntu-cargo-tarpaulin:xenial-stable "
