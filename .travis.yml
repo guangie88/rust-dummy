@@ -59,15 +59,15 @@ after_success:
       # cargo login "$CRATES_TOKEN"
       # cargo publish
     elif [ "$ARTIFACT" = "true" ] && [ -n "$TRAVIS_TAG" ]; then
-      curl -X POST \
-        -H "Authorization: token $GITHUB_TOKEN" \
-        -H "Content-Type: application/json" \
-        -d \
-        '{
-            "tag_name": "$TRAVIS_TAG",
-            "target_commitish": "master"
-        }' \
-        "https://api.github.com/repos/guangie88/rust-dummy/releases"
+      # curl -X POST \
+      #   -H "Authorization: token $GITHUB_TOKEN" \
+      #   -H "Content-Type: application/json" \
+      #   -d \
+      #   '{
+      #       "tag_name": "$TRAVIS_TAG",
+      #       "target_commitish": "master"
+      #   }' \
+      #   "https://api.github.com/repos/guangie88/rust-dummy/releases"
 
       # this needs to be jq processed to extract out the `id` value
       export TAG_ID=$(curl -X GET \
@@ -94,3 +94,4 @@ after_success:
 branches:
   only:
     - master
+    - /^v\d+\.\d+\.\d+(-\S*)?$/
