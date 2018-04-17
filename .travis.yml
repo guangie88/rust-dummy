@@ -2,23 +2,24 @@ language: rust
 
 matrix:
   include:
-    - services: docker
-      env:
-        - LINT=true
-        - PUBLISH=true
+    # - services: docker
+    #   env:
+    #     - LINT=true
+    #     - PUBLISH=true
     - services: docker
       env:
         - ARTIFACT=true
         - ARTIFACTS_DIR=./artifacts
-    - services: docker
-      env:
-        - COVERAGE=true
-    - rust: stable
-      sudo: false
-    - rust: beta
-      sudo: false
-    - rust: nightly
-      sudo: false
+        - BINARY_NAME=rust-dummy
+    # - services: docker
+    #   env:
+    #     - COVERAGE=true
+    # - rust: stable
+    #   sudo: false
+    # - rust: beta
+    #   sudo: false
+    # - rust: nightly
+    #   sudo: false
   fast_finish: true
 
 before_script:
@@ -41,7 +42,7 @@ script:
     elif [ "$ARTIFACT" = "true" ]; then
       docker-compose -f docker-compose.build.yml run -u $UID:`id -g` build
       mkdir $ARTIFACTS_DIR
-      cp ./target/x86_64-unknown-linux-musl/release/terraform-zap $ARTIFACTS_DIR
+      cp ./target/x86_64-unknown-linux-musl/release/$BINARY_NAME $ARTIFACTS_DIR
     elif [ "$COVERAGE" = "true" ]; then
       echo "Coverage not dealing with `script`"
     else
@@ -74,15 +75,15 @@ after_success:
         "https://api.github.com/repos/guangie88/rust-dummy/releases" \
         | jq -r '.[] | select(.tag_name == "'$TRAVIS_TAG'").id')
 
-      # TODO need to zip up the artifacts
-      # zip ...
-      # and assign to ZIP_FILE
+      # formulate zip file name
+      export ZIP_FILE=$BINARY_NAME-$TRAVIS_TAG.zip
+      zip $ZIP_FILE "$ARTIFACTS_DIR/$BINARY_NAME"
 
       curl -X POST \
         -H "Authorization: token $GITHUB_TOKEN" \
         -H "Content-Type: application/zip" \
         --upload-file $ZIP_FILE \
-        "https://uploads.github.com/repos/guangie88/rust-dummy/releases/$TAG_ID/assets?name=rust-dummy-$TRAVIS_TAG.zip"
+        "https://uploads.github.com/repos/guangie88/rust-dummy/releases/$TAG_ID/assets?name=$ZIP_FILE"
     elif [ "$COVERAGE" = "true" ] && [ -z "$TRAVIS_TAG" ]; then
       docker run --security-opt seccomp=unconfined -v "$PWD:/volume" \
         guangie88/ubuntu-cargo-tarpaulin:xenial-stable "
