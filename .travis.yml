@@ -28,9 +28,9 @@ before_script:
     if [ "$LINT" = "true" ]; then
       docker-compose -f docker-compose.lint-test.yml build lint-test
     elif [ "$ARTIFACT" = "true" ]; then
-      echo "Artifact not dealing with `before_script`"
+      echo "Artifact not dealing with 'before_script'"
     elif [ "$COVERAGE" = "true" ]; then
-      echo "Coverage not dealing with `before_script`"
+      echo "Coverage not dealing with 'before_script'"
     else
       cargo test --all --no-run --verbose
     fi
@@ -44,7 +44,7 @@ script:
       mkdir $ARTIFACTS_DIR
       cp ./target/x86_64-unknown-linux-musl/release/$BINARY_NAME $ARTIFACTS_DIR
     elif [ "$COVERAGE" = "true" ]; then
-      echo "Coverage not dealing with `script`"
+      echo "Coverage not dealing with 'script'"
     else
       cargo doc --all
       cargo test --all --verbose
@@ -55,7 +55,7 @@ after_success:
     if [ "$PUBLISH" = "true" ] && [ -n "$TRAVIS_TAG" ]; then
       # publish when this is a new tag
       # not seriously publishing
-      echo "Simulate `cargo login` and `cargo publish`"
+      echo "Simulate 'cargo login' and 'cargo publish'"
       # cargo login "$CRATES_TOKEN"
       # cargo publish
     elif [ "$ARTIFACT" = "true" ] && [ -n "$TRAVIS_TAG" ]; then
