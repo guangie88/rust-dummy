@@ -2,24 +2,24 @@ language: rust
 
 matrix:
   include:
-    # - services: docker
-    #   env:
-    #     - LINT=true
-    #     - PUBLISH=true
+    - services: docker
+      env:
+        - LINT=true
+        - PUBLISH=true
     - services: docker
       env:
         - ARTIFACT=true
         - ARTIFACTS_DIR=./artifacts
         - BINARY_NAME=rust-dummy
-    # - services: docker
-    #   env:
-    #     - COVERAGE=true
-    # - rust: stable
-    #   sudo: false
-    # - rust: beta
-    #   sudo: false
-    # - rust: nightly
-    #   sudo: false
+    - services: docker
+      env:
+        - COVERAGE=true
+    - rust: stable
+      sudo: false
+    - rust: beta
+      sudo: false
+    - rust: nightly
+      sudo: false
   fast_finish: true
 
 before_script:
@@ -59,16 +59,7 @@ after_success:
       # cargo login "$CRATES_TOKEN"
       # cargo publish
     elif [ "$ARTIFACT" = "true" ] && [ -n "$TRAVIS_TAG" ]; then
-      # curl -X POST \
-      #   -H "Authorization: token $GITHUB_TOKEN" \
-      #   -H "Content-Type: application/json" \
-      #   -d \
-      #   '{
-      #       "tag_name": "$TRAVIS_TAG",
-      #       "target_commitish": "master"
-      #   }' \
-      #   "https://api.github.com/repos/guangie88/rust-dummy/releases"
-
+      # upload binary artifact when this is a new tag
       # this needs to be jq processed to extract out the `id` value
       export TAG_ID=$(curl -X GET \
         -H "Authorization: token $GITHUB_TOKEN" \
@@ -76,8 +67,9 @@ after_success:
         | jq -r '.[] | select(.tag_name == "'$TRAVIS_TAG'").id')
 
       # formulate zip file name
+      # and ignore 
       export ZIP_FILE=$BINARY_NAME-$TRAVIS_TAG.zip
-      zip $ZIP_FILE "$ARTIFACTS_DIR/$BINARY_NAME"
+      zip -j $ZIP_FILE "$ARTIFACTS_DIR/$BINARY_NAME"
 
       curl -X POST \
         -H "Authorization: token $GITHUB_TOKEN" \
