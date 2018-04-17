@@ -64,17 +64,15 @@ after_success:
         -d \
         '{
             "tag_name": "$TRAVIS_TAG",
-            "target_commitish": "master",
-            "name": "TODO",
-            "body": "This is TODO"
+            "target_commitish": "master"
         }' \
         "https://api.github.com/repos/guangie88/rust-dummy/releases"
 
       # this needs to be jq processed to extract out the `id` value
-      # and assign the value as TAG_ID
-      curl -X GET \
+      export TAG_ID=$(curl -X GET \
         -H "Authorization: token $GITHUB_TOKEN" \
-        "https://api.github.com/repos/guangie88/rust-dummy/releases"
+        "https://api.github.com/repos/guangie88/rust-dummy/releases" \
+        | jq -r '.[] | select(.tag_name == "'$TRAVIS_TAG'").id')
 
       # TODO need to zip up the artifacts
       # zip ...
