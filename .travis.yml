@@ -71,9 +71,9 @@ after_success:
       "https://api.github.com/repos/$REPO_USERNAME/$REPO_NAME/releases" \
       | jq -r '.[] | select(.tag_name == "'$TRAVIS_TAG'").id')
 
-    # formulate zip file name
-    # and ignore 
-    export ZIP_FILE=$BINARY_NAME-$TRAVIS_TAG.zip
+    # formulate zip
+    ZIP_SUFFIX=`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -i`
+    ZIP_FILE=$BINARY_NAME-$TRAVIS_TAG-$ZIP_SUFFIX.zip
     zip -j $ZIP_FILE "$ARTIFACTS_DIR/$BINARY_NAME"
 
     curl -X POST \
