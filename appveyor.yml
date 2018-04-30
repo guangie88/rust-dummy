@@ -72,8 +72,6 @@ test_script:
 - cargo test --all
 
 before_deploy:
-# - if %ARTIFACT%=="true" if "%APPVEYOR_REPO_TAG%"=="true"
-#     cargo build --release --verbose
 - if "%ARTIFACT%"=="true"
     cargo build --release --verbose &
     mkdir %ARTIFACT_DIR% &
