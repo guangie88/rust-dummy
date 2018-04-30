@@ -9,10 +9,10 @@ matrix:
 environment:
   PROJECT_NAME: auto-release-rs
   global:
-  - BINARY_NAME=auto-release
-    REPO_USERNAME=guangie88
-    REPO_NAME=auto-release-rs
-    ARTIFACT_DIR=artifacts
+  - BINARY_NAME: auto-release
+    REPO_USERNAME: guangie88
+    REPO_NAME: auto-release-rs
+    ARTIFACT_DIR: artifacts
   matrix:
   # Stable channel
   # - TARGET: i686-pc-windows-gnu
