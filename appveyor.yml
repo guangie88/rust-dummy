@@ -7,7 +7,7 @@ matrix:
   fast_finish: true
 
 environment:
-  PROJECT_NAME: terraform-zap
+  PROJECT_NAME: auto-release-rs
   global:
   - BINARY_NAME=auto-release
     REPO_USERNAME=guangie88
@@ -20,11 +20,13 @@ environment:
   - TARGET: i686-pc-windows-msvc
     CHANNEL: stable
     ARTIFACT: true
+    ZIP_SUFFIX: windows-x86
   # - TARGET: x86_64-pc-windows-gnu
   #   CHANNEL: stable
   - TARGET: x86_64-pc-windows-msvc
     CHANNEL: stable
     ARTIFACT: true
+    ZIP_SUFFIX: windows-x86_64
 
   # Beta channel
   # - TARGET: i686-pc-windows-gnu
@@ -77,6 +79,7 @@ build_script:
 
 deploy:
   provider: GitHub
+  release: "%BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip"
   auth_token:
     secure: "njCwSow8gtsplARSx0TLiQRB29GHALM67ClkPuE6Z8JbTR6A3k4UKDcUuJE4WK9C"
   artifact: "%ARTIFACT_DIR%\*.exe"
