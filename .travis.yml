@@ -2,9 +2,9 @@ language: rust
 
 env:
   global:
-  - BINARY_NAME=rust-dummy
+  - BINARY_NAME=auto-release
   - REPO_USERNAME=guangie88
-  - REPO_NAME=rust-dummy
+  - REPO_NAME=auto-release-rs
 
 matrix:
   include:
