@@ -73,9 +73,9 @@ build_script:
 # - if %ARTIFACT%=="true" if "%APPVEYOR_REPO_TAG%"=="true"
 #     cargo build --release --verbose
 - if "%ARTIFACT%"=="true"
-    cargo build --release --verbose
-    mkdir %ARTIFACT_DIR%
-    copy target\release\%BINARY_NAME%.exe %ARTIFACT_DIR%\%BINARY_NAME%.exe
+    cargo build --release --verbose &
+    mkdir %ARTIFACT_DIR% &
+    copy target\release\%BINARY_NAME%.exe %ARTIFACT_DIR%\
 
 deploy:
   provider: GitHub
