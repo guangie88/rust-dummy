@@ -1,8 +1,8 @@
 [package]
-name = "rust-dummy"
+name = "auto-release"
 version = "0.1.0"
 authors = ["Chen Weiguang <chen.weiguang@gmail.com>"]
 
 [[bin]]
-name = "rust-dummy"
+name = "auto-release"
 path = "src/main.rs"
