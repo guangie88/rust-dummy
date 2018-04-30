@@ -70,11 +70,11 @@ build_script:
 test_script:
 - cargo test --all
 - if "%ARTIFACT%"=="true"
-    set ARTIFACT_ZIP=%BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip
+    set "ARTIFACT_ZIP=%BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip"
     cargo build --release --verbose &
     mkdir %ARTIFACT_DIR% &
     pushd %ARTIFACT_DIR% &
-    7z a %ARTIFACT_ZIP% target\release\%BINARY_NAME%.exe &
+    7z a "%ARTIFACT_ZIP%" "target\release\%BINARY_NAME%.exe" &
     popd
 
 # before_deploy:
