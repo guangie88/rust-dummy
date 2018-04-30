@@ -70,12 +70,12 @@ build: off
 test_script:
 - cargo build --verbose
 - cargo test --all
-
-before_deploy:
 - if "%ARTIFACT%"=="true"
     cargo build --release --verbose &
     mkdir %ARTIFACT_DIR% &
     copy target\release\%BINARY_NAME%.exe %ARTIFACT_DIR%\
+
+# before_deploy:
 
 deploy:
   provider: GitHub
@@ -85,8 +85,8 @@ deploy:
   artifact: '%ARTIFACT_DIR%\*.exe'
   draft: false
   prerelease: false
-  # on:
-  #   appveyor_repo_tag: true
+  on:
+    appveyor_repo_tag: true
 
 branches:
   only:
