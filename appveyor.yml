@@ -69,17 +69,15 @@ build_script:
 
 test_script:
 - cargo test --all
-- cmd: >-
-    if "%ARTIFACT%"=="true" (
-      set APPVEYOR_REPO_TAG_NAME="v0.1.0"
-      set "ARTIFACT_ZIP=%BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip"
-      echo "%ARTIFACT_ZIP%"
-      cargo build --release --verbose
-      mkdir %ARTIFACT_DIR%
-      pushd %ARTIFACT_DIR%
-      7z a "%ARTIFACT_ZIP%" "target\release\%BINARY_NAME%.exe"
-      popd
-    )
+- if "%ARTIFACT%"=="true"
+    set APPVEYOR_REPO_TAG_NAME="v0.1.0" &
+    set ARTIFACT_ZIP="%BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip" &
+    echo "%ARTIFACT_ZIP%" &
+    cargo build --release --verbose &
+    mkdir %ARTIFACT_DIR% &
+    pushd %ARTIFACT_DIR% &
+    7z a "%ARTIFACT_ZIP%" "target\release\%BINARY_NAME%.exe" &
+    popd
 
 # before_deploy:
 # - if "%ARTIFACT%"=="true"
