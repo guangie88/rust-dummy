@@ -56,11 +56,11 @@ install:
 - cargo -vV
 - if "%TARGET%"=="i686-pc-windows-gnu"
     cinst mingw --x86 -y &
-    set "PATH=%PATH%;C:\tools\mingw32\bin" &
+    set PATH=%PATH%;C:\tools\mingw32\bin &
     gcc --version
 - if "%TARGET%"=="x86_64-pc-windows-gnu"
     cinst mingw -y &
-    set "PATH=%PATH%;C:\tools\mingw64\bin" &
+    set PATH=%PATH%;C:\tools\mingw64\bin &
     gcc --version
 - echo %PATH%
 
@@ -71,17 +71,19 @@ test_script:
 - cargo test --all
 
 before_deploy:
+- set ARTIFACT_ZIP=%BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip
 - if "%ARTIFACT%"=="true"
-    set ARTIFACT_PATH=%ARTIFACT_DIR%\%BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip &
     cargo build --release --verbose &
     mkdir %ARTIFACT_DIR% &
-    7z a %ARTIFACT_PATH% target\release\%BINARY_NAME%.exe
+    pushd %ARTIFACT_DIR% &
+    7z a %ARTIFACT_ZIP% "%APPVEYOR_BUILD_FOLDER%\target\release\%BINARY_NAME%.exe" &
+    popd
 
 deploy:
   provider: GitHub
   auth_token:
     secure: "njCwSow8gtsplARSx0TLiQRB29GHALM67ClkPuE6Z8JbTR6A3k4UKDcUuJE4WK9C"
-  artifact: "%ARTIFACT_PATH%"
+  artifact: '%ARTIFACT_DIR%\%ARTIFACT_ZIP%'
   draft: false
   prerelease: false
   on:
