@@ -72,22 +72,22 @@ test_script:
 
 before_deploy:
 - if "%ARTIFACT%"=="true"
+    set ARTIFACT_PATH=%ARTIFACT_DIR%\%BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip &
     cargo build --release --verbose &
     mkdir %ARTIFACT_DIR% &
-    copy target\release\%BINARY_NAME%.exe %ARTIFACT_DIR%\
+    7z a %ARTIFACT_PATH% target\release\%BINARY_NAME%.exe
 
-# deploy:
-#   provider: GitHub
-#   release: "%BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip"
-#   auth_token:
-#     secure: "njCwSow8gtsplARSx0TLiQRB29GHALM67ClkPuE6Z8JbTR6A3k4UKDcUuJE4WK9C"
-#   artifact: '%ARTIFACT_DIR%\*.exe'
-#   draft: false
-#   prerelease: false
-#   on:
-#     branch: master 
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: "njCwSow8gtsplARSx0TLiQRB29GHALM67ClkPuE6Z8JbTR6A3k4UKDcUuJE4WK9C"
+  artifact: "%ARTIFACT_PATH%"
+  draft: false
+  prerelease: false
+  on:
+    appveyor_repo_tag: true
 
-# branches:
-#   only:
-#   - master
-#   - /^v\d+\.\d+\.\d+(-\S*)?$/
+branches:
+  only:
+  - master
+  - /^v\d+\.\d+\.\d+(-\S*)?$/
