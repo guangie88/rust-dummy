@@ -82,7 +82,7 @@ deploy:
   release: "%BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip"
   auth_token:
     secure: "njCwSow8gtsplARSx0TLiQRB29GHALM67ClkPuE6Z8JbTR6A3k4UKDcUuJE4WK9C"
-  artifact: %ARTIFACT_DIR%\*.exe
+  artifact: '%ARTIFACT_DIR%\*.exe'
   draft: false
   prerelease: false
   on:
