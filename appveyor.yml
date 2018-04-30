@@ -10,8 +10,9 @@ environment:
   PROJECT_NAME: terraform-zap
   global:
   - BINARY_NAME=auto-release
-  - REPO_USERNAME=guangie88
-  - REPO_NAME=auto-release-rs
+    REPO_USERNAME=guangie88
+    REPO_NAME=auto-release-rs
+    ARTIFACT_DIR=artifacts
   matrix:
   # Stable channel
   # - TARGET: i686-pc-windows-gnu
@@ -71,12 +72,14 @@ build_script:
 #     cargo build --release --verbose
 - if %ARTIFACT%=="true"
     cargo build --release --verbose
+    mkdir %ARTIFACT_DIR%
+    copy target\release\%BINARY_NAME%.exe %ARTIFACT_DIR%\%BINARY_NAME%.exe
 
 deploy:
   provider: GitHub
   auth_token:
     secure: "njCwSow8gtsplARSx0TLiQRB29GHALM67ClkPuE6Z8JbTR6A3k4UKDcUuJE4WK9C"
-  artifact: /Foo-.*\.tar.gz/
+  artifact: "%ARTIFACT_DIR%\*.exe"
   draft: false
   prerelease: false
   on:
