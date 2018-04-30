@@ -67,16 +67,16 @@ install:
 build_script:
 - cargo build --verbose
 
-test_script:
-- cargo test --all
-
-before_deploy:
+after_build:
 - if "%ARTIFACT%"=="true"
     cargo build --release --verbose &
     mkdir %ARTIFACT_DIR% &
     pushd %ARTIFACT_DIR% &
     7z a %BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip "%APPVEYOR_BUILD_FOLDER%\target\release\%BINARY_NAME%.exe" &
     popd
+
+test_script:
+- cargo test --all
 
 artifacts:
 - path: $(ARTIFACT_DIR)\$(BINARY_NAME)-$(APPVEYOR_REPO_TAG_NAME)-$(ZIP_SUFFIX).zip
