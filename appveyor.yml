@@ -70,9 +70,7 @@ build_script:
 test_script:
 - cargo test --all
 
-deploy: on
-
-deploy_script:
+before_deploy:
 - if "%ARTIFACT%"=="true"
     cargo build --release --verbose &
     mkdir %ARTIFACT_DIR% &
@@ -89,7 +87,7 @@ deploy_script:
 #   on:
 #     branch: master 
 
-branches:
-  only:
-  - master
-  - /^v\d+\.\d+\.\d+(-\S*)?$/
+# branches:
+#   only:
+#   - master
+#   - /^v\d+\.\d+\.\d+(-\S*)?$/
