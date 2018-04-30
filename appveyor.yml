@@ -64,18 +64,17 @@ install:
     gcc --version
 - echo %PATH%
 
-build: off
-
-# `cargo test` suffices for non-artifact builds.
-test_script:
+build_script:
 - cargo build --verbose
+
+test_script:
 - cargo test --all
+
+before_deploy:
 - if "%ARTIFACT%"=="true"
     cargo build --release --verbose &
     mkdir %ARTIFACT_DIR% &
     copy target\release\%BINARY_NAME%.exe %ARTIFACT_DIR%\
-
-# before_deploy:
 
 deploy:
   provider: GitHub
@@ -86,7 +85,7 @@ deploy:
   draft: false
   prerelease: false
   on:
-    appveyor_repo_tag: true
+    branch: master 
 
 branches:
   only:
