@@ -8,16 +8,22 @@ matrix:
 
 environment:
   PROJECT_NAME: terraform-zap
+  global:
+  - BINARY_NAME=auto-release
+  - REPO_USERNAME=guangie88
+  - REPO_NAME=auto-release-rs
   matrix:
   # Stable channel
   # - TARGET: i686-pc-windows-gnu
   #   CHANNEL: stable
   - TARGET: i686-pc-windows-msvc
     CHANNEL: stable
+    ARTIFACT: true
   # - TARGET: x86_64-pc-windows-gnu
   #   CHANNEL: stable
   - TARGET: x86_64-pc-windows-msvc
     CHANNEL: stable
+    ARTIFACT: true
 
   # Beta channel
   # - TARGET: i686-pc-windows-gnu
@@ -55,12 +61,26 @@ install:
     gcc --version
 - echo %PATH%
 
-# `cargo test` takes care of building for us, so disable Appveyor's build stage.
-build: off
-
+# `cargo test` suffices for non-artifact builds.
 test_script:
 - cargo build --verbose
 - cargo test --all
+
+build_script:
+# - if %ARTIFACT%=="true" if "%APPVEYOR_REPO_TAG%"=="true"
+#     cargo build --release --verbose
+- if %ARTIFACT%=="true"
+    cargo build --release --verbose
+
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: "njCwSow8gtsplARSx0TLiQRB29GHALM67ClkPuE6Z8JbTR6A3k4UKDcUuJE4WK9C"
+  artifact: /Foo-.*\.tar.gz/
+  draft: false
+  prerelease: false
+  on:
+    appveyor_repo_tag: true
 
 branches:
   only:
