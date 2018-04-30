@@ -70,6 +70,8 @@ build_script:
 test_script:
 - cargo test --all
 
+deploy: on
+
 deploy_script:
 - if "%ARTIFACT%"=="true"
     cargo build --release --verbose &
