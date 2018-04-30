@@ -73,7 +73,7 @@ test_script:
     set ARTIFACT_PATH=%ARTIFACT_DIR%\%BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip &
     cargo build --release --verbose &
     mkdir %ARTIFACT_DIR% &
-    zip %ARTIFACT_PATH% target\release\%BINARY_NAME%.exe
+    7z a %ARTIFACT_PATH% target\release\%BINARY_NAME%.exe
 
 # before_deploy:
 # - if "%ARTIFACT%"=="true"
