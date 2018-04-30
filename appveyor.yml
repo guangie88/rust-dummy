@@ -89,7 +89,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: "njCwSow8gtsplARSx0TLiQRB29GHALM67ClkPuE6Z8JbTR6A3k4UKDcUuJE4WK9C"
-  artifact: "%ARTIFACT_DIR%\%ARTIFACT_ZIP%"
+  artifact: '%ARTIFACT_DIR%\%ARTIFACT_ZIP%'
   draft: false
   prerelease: false
   on:
