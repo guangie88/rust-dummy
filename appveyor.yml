@@ -7,17 +7,26 @@ matrix:
   fast_finish: true
 
 environment:
-  PROJECT_NAME: terraform-zap
+  PROJECT_NAME: auto-release-rs
+  global:
+    BINARY_NAME: auto-release
+    REPO_USERNAME: guangie88
+    REPO_NAME: auto-release-rs
+    ARTIFACT_DIR: artifacts
   matrix:
   # Stable channel
   # - TARGET: i686-pc-windows-gnu
   #   CHANNEL: stable
   - TARGET: i686-pc-windows-msvc
     CHANNEL: stable
+    ARTIFACT: true
+    ZIP_SUFFIX: windows-x86
   # - TARGET: x86_64-pc-windows-gnu
   #   CHANNEL: stable
   - TARGET: x86_64-pc-windows-msvc
     CHANNEL: stable
+    ARTIFACT: true
+    ZIP_SUFFIX: windows-x86_64
 
   # Beta channel
   # - TARGET: i686-pc-windows-gnu
@@ -55,12 +64,28 @@ install:
     gcc --version
 - echo %PATH%
 
-# `cargo test` takes care of building for us, so disable Appveyor's build stage.
-build: off
+build_script:
+- cargo build --verbose
 
 test_script:
-- cargo build --verbose
 - cargo test --all
+
+before_deploy:
+- if "%ARTIFACT%"=="true"
+    set ARTIFACT_PATH=%ARTIFACT_DIR%\%BINARY_NAME%-%APPVEYOR_REPO_TAG_NAME%-%ZIP_SUFFIX%.zip &
+    cargo build --release --verbose &
+    mkdir %ARTIFACT_DIR% &
+    7z a %ARTIFACT_PATH% target\release\%BINARY_NAME%.exe
+
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: "njCwSow8gtsplARSx0TLiQRB29GHALM67ClkPuE6Z8JbTR6A3k4UKDcUuJE4WK9C"
+  artifact: "%ARTIFACT_PATH%"
+  draft: false
+  prerelease: false
+  on:
+    appveyor_repo_tag: true
 
 branches:
   only:
