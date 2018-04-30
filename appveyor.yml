@@ -64,12 +64,14 @@ install:
     gcc --version
 - echo %PATH%
 
+build: off
+
 # `cargo test` suffices for non-artifact builds.
 test_script:
 - cargo build --verbose
 - cargo test --all
 
-build_script:
+before_deploy:
 # - if %ARTIFACT%=="true" if "%APPVEYOR_REPO_TAG%"=="true"
 #     cargo build --release --verbose
 - if "%ARTIFACT%"=="true"
