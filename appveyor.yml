@@ -72,9 +72,8 @@ build_script:
 after_build:
 - if "%ARTIFACT%"=="true"
     mkdir %CARGO_CONFIG_DIR% &
-    echo '[build]'>>%CARGO_CONFIG% &
-    echo.>>%CARGO_CONFIG% &
-    echo 'rustflags = ["-Z", "unstable-options", "-C", "target-feature=+crt-static"]'>>%CARGO_CONFIG% &
+    echo [build]>>%CARGO_CONFIG% &
+    echo rustflags = ["-Z", "unstable-options", "-C", "target-feature=+crt-static"]>>%CARGO_CONFIG% &
     cargo build --release --verbose &
     mkdir %ARTIFACT_DIR% &
     pushd %ARTIFACT_DIR% &
