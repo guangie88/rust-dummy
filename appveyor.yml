@@ -74,7 +74,7 @@ build_script:
 - cargo build --verbose
 
 after_build:
-- if "%ARTIFACT%"=="true"
+- if "%ARTIFACT%"=="true" if "%APPVEYOR_REPO_TAG%"=="true"
     mkdir %CARGO_CONFIG_DIR% &
     echo [build]>>%CARGO_CONFIG% &
     echo rustflags = ["-Z", "unstable-options", "-C", "target-feature=+crt-static"]>>%CARGO_CONFIG% &
