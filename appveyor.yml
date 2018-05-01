@@ -1,7 +1,7 @@
 # source: https://github.com/starkat99/appveyor-rust/blob/master/appveyor.yml
 # source: https://github.com/japaric/rust-everywhere/blob/master/appveyor.yml
 
-version: 0.1.0-build{build}
+version: 0.1.4-build{build}
 
 matrix:
   fast_finish: true
@@ -13,6 +13,8 @@ environment:
     REPO_USERNAME: guangie88
     REPO_NAME: auto-release-rs
     ARTIFACT_DIR: artifacts
+    CARGO_CONFIG_DIR: .cargo
+    CARGO_CONFIG: .cargo\config
   matrix:
   # Stable channel
   # - TARGET: i686-pc-windows-gnu
@@ -69,6 +71,10 @@ build_script:
 
 after_build:
 - if "%ARTIFACT%"=="true"
+    mkdir %CARGO_CONFIG_DIR% &
+    echo '[build]' >> %CARGO_CONFIG% &
+    echo. >> %CARGO_CONFIG% &
+    echo 'rustflags = ["-Z", "unstable-options", "-C", "target-feature=+crt-static"]' >> %CARGO_CONFIG% &
     cargo build --release --verbose &
     mkdir %ARTIFACT_DIR% &
     pushd %ARTIFACT_DIR% &
