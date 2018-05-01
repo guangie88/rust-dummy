@@ -1,7 +1,7 @@
 # source: https://github.com/starkat99/appveyor-rust/blob/master/appveyor.yml
 # source: https://github.com/japaric/rust-everywhere/blob/master/appveyor.yml
 
-version: 0.1.0-build{build}
+version: 0.1.4-build{build}
 
 matrix:
   fast_finish: true
@@ -13,20 +13,22 @@ environment:
     REPO_USERNAME: guangie88
     REPO_NAME: auto-release-rs
     ARTIFACT_DIR: artifacts
+    CARGO_CONFIG_DIR: .cargo
+    CARGO_CONFIG: .cargo\config
   matrix:
   # Stable channel
   # - TARGET: i686-pc-windows-gnu
   #   CHANNEL: stable
-  - TARGET: i686-pc-windows-msvc
-    CHANNEL: stable
-    ARTIFACT: true
-    ZIP_SUFFIX: windows-x86
+  # - TARGET: i686-pc-windows-msvc
+  #   CHANNEL: stable
+  #   ARTIFACT: true
+  #   ZIP_SUFFIX: windows-x86
   # - TARGET: x86_64-pc-windows-gnu
   #   CHANNEL: stable
-  - TARGET: x86_64-pc-windows-msvc
-    CHANNEL: stable
-    ARTIFACT: true
-    ZIP_SUFFIX: windows-x86_64
+  # - TARGET: x86_64-pc-windows-msvc
+  #   CHANNEL: stable
+  #   ARTIFACT: true
+  #   ZIP_SUFFIX: windows-x86_64
 
   # Beta channel
   # - TARGET: i686-pc-windows-gnu
@@ -41,12 +43,16 @@ environment:
   # Nightly channel
   # - TARGET: i686-pc-windows-gnu
   #   CHANNEL: nightly
-  # - TARGET: i686-pc-windows-msvc
-  #   CHANNEL: nightly
+  - TARGET: i686-pc-windows-msvc
+    CHANNEL: nightly
+    ARTIFACT: true
+    ZIP_SUFFIX: windows-x86
   # - TARGET: x86_64-pc-windows-gnu
   #   CHANNEL: nightly
-  # - TARGET: x86_64-pc-windows-msvc
-  #   CHANNEL: nightly
+  - TARGET: x86_64-pc-windows-msvc
+    CHANNEL: nightly
+    ARTIFACT: true
+    ZIP_SUFFIX: windows-x86_64
 
 install:
 - curl -sSf -o rustup-init.exe https://win.rustup.rs
@@ -68,7 +74,10 @@ build_script:
 - cargo build --verbose
 
 after_build:
-- if "%ARTIFACT%"=="true"
+- if "%ARTIFACT%"=="true" if "%APPVEYOR_REPO_TAG%"=="true"
+    mkdir %CARGO_CONFIG_DIR% &
+    echo [build]>>%CARGO_CONFIG% &
+    echo rustflags = ["-Z", "unstable-options", "-C", "target-feature=+crt-static"]>>%CARGO_CONFIG% &
     cargo build --release --verbose &
     mkdir %ARTIFACT_DIR% &
     pushd %ARTIFACT_DIR% &
