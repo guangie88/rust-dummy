@@ -39,8 +39,16 @@ matrix:
     sudo: false
   fast_finish: true
 
-before_script:
+before_install:
 - set -e
+
+install:
+- |
+  if [ "$TRAVIS_OS_NAME" = "osx" ]; then
+    brew install jq
+  fi
+
+before_script:
 - |
   if [ "$LINT" = "true" ]; then
     docker-compose -f docker-compose.lint-test.yml build lint-test
@@ -92,7 +100,7 @@ after_success:
       | jq -r '.[] | select(.tag_name == "'$TRAVIS_TAG'").id')
 
     # formulate zip
-    ZIP_SUFFIX=`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -i`
+    ZIP_SUFFIX=`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -p`
     ZIP_FILE=$BINARY_NAME-$TRAVIS_TAG-$ZIP_SUFFIX.zip
     zip -j $ZIP_FILE "$ARTIFACTS_DIR/$BINARY_NAME"
 
