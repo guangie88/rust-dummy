@@ -1,5 +1,9 @@
 language: rust
 
+os:
+- linux
+- osx
+
 env:
   global:
   - BINARY_NAME=auto-release
