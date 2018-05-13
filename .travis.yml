@@ -1,9 +1,5 @@
 language: rust
 
-os:
-- linux
-- osx
-
 env:
   global:
   - BINARY_NAME=auto-release
@@ -13,21 +9,30 @@ env:
 matrix:
   include:
   - services: docker
+    os: linux
     env:
       - LINT=true
       - PUBLISH=true
   - services: docker
+    os: linux
     env:
       - ARTIFACT=true
       - ARTIFACTS_DIR=./artifacts
   - services: docker
+    os: linux
     env:
       - COVERAGE=true
   - rust: stable
+    os: linux
+    sudo: false
+  - rust: stable
+    os: osx
     sudo: false
   - rust: beta
+    os: linux
     sudo: false
   - rust: nightly
+    os: linux
     sudo: false
   fast_finish: true
 
