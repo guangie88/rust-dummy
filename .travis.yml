@@ -61,7 +61,7 @@ script:
     mkdir $ARTIFACTS_DIR
     cp ./target/x86_64-unknown-linux-musl/release/$BINARY_NAME $ARTIFACTS_DIR
   elif [ "$OSX_ARTIFACT" = "true" ]; then
-    cargo release --all --verbose
+    cargo build --release --all --verbose
     mkdir $ARTIFACTS_DIR
     cp ./target/release/$BINARY_NAME $ARTIFACTS_DIR
   elif [ "$COVERAGE" = "true" ]; then
