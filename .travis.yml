@@ -57,12 +57,16 @@ script:
 
 after_success:
 - |
-  if [ "$PUBLISH" = "true" ] && [ -n "$TRAVIS_TAG" ]; then
-    # publish when this is a new tag
-    # not seriously publishing
-    echo "Simulate 'cargo login' and 'cargo publish'"
-    # cargo login "$CRATES_TOKEN"
-    # cargo publish
+  if [ "$PUBLISH" = "true" ]; then
+    cargo login "$CRATES_TOKEN"
+
+    if [ -n "$TRAVIS_TAG" ]; then
+      # publish when this is a new tag
+      # not seriously publishing
+      echo "Simulate 'cargo login' and 'cargo publish'"
+    else
+      cargo publish --dry-run --verbose
+    fi
   elif [ "$ARTIFACT" = "true" ] && [ -n "$TRAVIS_TAG" ]; then
     # upload binary artifact when this is a new tag
     # this needs to be jq processed to extract out the `id` value
